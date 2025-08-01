@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 24-07-2025 a las 16:55:30
+-- Tiempo de generación: 01-08-2025 a las 18:23:32
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.2.18
 
@@ -18,8 +18,75 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `dbjuegos`
+-- Base de datos: `dbjuegosdos`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `carrito`
+--
+
+CREATE TABLE `carrito` (
+  `idcarrito` int NOT NULL,
+  `idusuario` int NOT NULL,
+  `idjuego` int NOT NULL,
+  `cantidad` int DEFAULT '1',
+  `fechacreacion` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ;
+
+--
+-- Volcado de datos para la tabla `carrito`
+--
+
+INSERT INTO `carrito` (`idcarrito`, `idusuario`, `idjuego`, `cantidad`, `fechacreacion`) VALUES
+(1, 1, 2, 1, '2025-07-29 15:26:49'),
+(2, 1, 3, 1, '2025-07-29 15:26:49'),
+(3, 3, 5, 1, '2025-07-29 15:26:49'),
+(4, 7, 1, 2, '2025-07-29 15:26:49'),
+(5, 10, 4, 1, '2025-07-29 15:26:49'),
+(6, 12, 6, 1, '2025-07-29 15:26:49');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_pedido`
+--
+
+CREATE TABLE `detalle_pedido` (
+  `iddetalle` int NOT NULL,
+  `idpedido` int NOT NULL,
+  `idjuego` int NOT NULL,
+  `cantidad` int NOT NULL,
+  `precio` decimal(10,2) NOT NULL
+) ;
+
+--
+-- Volcado de datos para la tabla `detalle_pedido`
+--
+
+INSERT INTO `detalle_pedido` (`iddetalle`, `idpedido`, `idjuego`, `cantidad`, `precio`) VALUES
+(1, 1, 1, 1, 59.99),
+(2, 2, 4, 1, 69.99),
+(3, 2, 5, 1, 59.99),
+(4, 3, 2, 1, 69.99),
+(5, 4, 3, 1, 59.99),
+(6, 5, 4, 1, 69.99),
+(7, 5, 1, 1, 59.99),
+(8, 6, 2, 1, 69.99),
+(9, 7, 6, 1, 59.99),
+(10, 8, 4, 1, 69.99),
+(11, 8, 3, 1, 59.99),
+(12, 9, 2, 1, 69.99),
+(13, 10, 5, 1, 59.99),
+(14, 11, 1, 1, 59.99),
+(15, 11, 4, 1, 69.99),
+(16, 12, 2, 1, 69.99),
+(17, 13, 7, 1, 59.99),
+(18, 14, 4, 1, 69.99),
+(19, 14, 5, 1, 59.99),
+(20, 15, 2, 1, 69.99),
+(21, 16, 2, 6, 69.62);
 
 -- --------------------------------------------------------
 
@@ -77,10 +144,7 @@ INSERT INTO `generos` (`idgenero`, `idestatus`, `nombre`, `descripcion`) VALUES
 (17, 1, 'Visual Novel', 'Juegos centrados en la narrativa y las decisiones del jugador.'),
 (18, 1, 'Horror de supervivencia', 'Juegos enfocados en sobrevivir a situaciones de terror.'),
 (19, 1, 'Idle', 'Juegos que progresan con poca o ninguna interacción del jugador.'),
-(20, 2, 'Fighting 2', 'Juegos centrados en combates entre personajes.'),
-(30, 2, 'Prueba 2', 'prueba del programador'),
-(34, 1, 'Prueba 5', 'prueba del programador'),
-(36, 1, 'Prueba 6', 'prueba del programador');
+(20, 2, 'Fighting 2', 'Juegos centrados en combates entre personajes.');
 
 -- --------------------------------------------------------
 
@@ -203,7 +267,8 @@ INSERT INTO `juegos` (`idjuego`, `idestatus`, `idgenero`, `nombre`, `descripcion
 (96, 1, 3, 'Diablo II: Resurrected', 'Remake del clásico RPG de acción.', '2021-09-23', 39.99, 1, ''),
 (97, 1, 5, 'Age of Empires II: Definitive Edition', 'Estrategia histórica con civilizaciones icónicas.', '2019-11-14', 19.99, 4, ''),
 (98, 1, 8, 'Microsoft Flight Simulator', 'Simulador de vuelo ultrarrealista.', '2020-08-18', 59.99, 2, ''),
-(99, 1, 12, 'Valheim con img', 'Supervivencia y exploración en un mundo vikingo.', '2021-02-02', 19.99, 2, 'img_67f7ed56434ec3.66535265.png');
+(99, 1, 12, 'Valheim con img', 'Supervivencia y exploración en un mundo vikingo.', '2021-02-02', 19.99, 2, 'img_67f7ed56434ec3.66535265.png'),
+(103, 1, 12, 'Valheim con img wewewew', NULL, '2021-02-02', 19.99, 2, 'img_67f7ed56434ec3.66535265.png');
 
 -- --------------------------------------------------------
 
@@ -396,11 +461,104 @@ INSERT INTO `juegos_plataformas` (`idjuego_plataforma`, `idjuego`, `idplataforma
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `metodos_pago`
+--
+
+CREATE TABLE `metodos_pago` (
+  `idmetodo` int NOT NULL,
+  `nombre` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Volcado de datos para la tabla `metodos_pago`
+--
+
+INSERT INTO `metodos_pago` (`idmetodo`, `nombre`) VALUES
+(1, 'Tarjeta de Crédito'),
+(2, 'PayPal'),
+(3, 'Transferencia Bancaria');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pagos`
+--
+
+CREATE TABLE `pagos` (
+  `idpago` int NOT NULL,
+  `idpedido` int NOT NULL,
+  `idmetodo` int NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `estado` enum('éxito','fallido','pendiente') DEFAULT 'pendiente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Volcado de datos para la tabla `pagos`
+--
+
+INSERT INTO `pagos` (`idpago`, `idpedido`, `idmetodo`, `monto`, `fecha`, `estado`) VALUES
+(1, 1, 1, 59.99, '2024-06-01 14:35:00', 'éxito'),
+(2, 2, 2, 129.98, '2024-06-02 18:25:00', 'éxito'),
+(3, 3, 1, 69.99, '2024-06-03 20:50:00', 'éxito'),
+(4, 4, 3, 59.99, '2024-06-04 13:20:00', 'éxito'),
+(5, 5, 1, 119.98, '2024-06-05 15:05:00', 'éxito'),
+(6, 6, 2, 69.99, '2024-06-06 17:35:00', 'éxito'),
+(7, 7, 1, 59.99, '2024-06-07 21:25:00', 'éxito'),
+(8, 8, 3, 129.98, '2024-06-08 14:05:00', 'éxito'),
+(9, 9, 1, 69.99, '2024-06-09 19:50:00', 'éxito'),
+(10, 10, 2, 59.99, '2024-06-10 12:35:00', 'éxito'),
+(11, 11, 1, 119.98, '2024-06-11 16:20:00', 'éxito'),
+(12, 12, 3, 69.99, '2024-06-12 18:05:00', 'éxito'),
+(13, 13, 1, 59.99, '2024-06-13 20:35:00', 'éxito'),
+(14, 14, 2, 129.98, '2024-06-14 13:50:00', 'éxito'),
+(15, 15, 1, 69.99, '2024-06-15 17:25:00', 'éxito');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pedidos`
+--
+
+CREATE TABLE `pedidos` (
+  `idpedido` int NOT NULL,
+  `idusuario` int NOT NULL,
+  `total` decimal(10,2) NOT NULL,
+  `estado` enum('pendiente','completado','cancelado') DEFAULT 'pendiente',
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+--
+-- Volcado de datos para la tabla `pedidos`
+--
+
+INSERT INTO `pedidos` (`idpedido`, `idusuario`, `total`, `estado`, `fecha`) VALUES
+(1, 1, 59.99, 'completado', '2024-06-01 14:30:00'),
+(2, 3, 129.98, 'pendiente', '2024-06-02 18:20:00'),
+(3, 5, 69.99, 'completado', '2024-06-03 20:45:00'),
+(4, 2, 59.99, 'completado', '2024-06-04 13:15:00'),
+(5, 7, 119.98, 'pendiente', '2024-06-05 15:00:00'),
+(6, 4, 69.99, 'completado', '2024-06-06 17:30:00'),
+(7, 9, 59.99, 'completado', '2024-06-07 21:20:00'),
+(8, 6, 129.98, 'completado', '2024-06-08 14:00:00'),
+(9, 8, 69.99, 'pendiente', '2024-06-09 19:45:00'),
+(10, 10, 59.99, 'completado', '2024-06-10 12:30:00'),
+(11, 12, 119.98, 'completado', '2024-06-11 16:15:00'),
+(12, 11, 69.99, 'completado', '2024-06-12 18:00:00'),
+(13, 14, 59.99, 'completado', '2024-06-13 20:30:00'),
+(14, 13, 129.98, 'pendiente', '2024-06-14 13:45:00'),
+(15, 15, 69.99, 'completado', '2024-06-15 17:20:00'),
+(16, 16, 58.00, 'completado', '2025-07-29 17:54:55');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `plataformas`
 --
 
 CREATE TABLE `plataformas` (
   `idplataforma` int NOT NULL,
+  `idestatus` int NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `descripcion` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -409,17 +567,17 @@ CREATE TABLE `plataformas` (
 -- Volcado de datos para la tabla `plataformas`
 --
 
-INSERT INTO `plataformas` (`idplataforma`, `nombre`, `descripcion`) VALUES
-(1, 'PC', 'Computadoras personales'),
-(2, 'PlayStation 5', 'Consola de Sony lanzada en 2020'),
-(3, 'Xbox Series X', 'Consola de Microsoft lanzada en 2020'),
-(4, 'Nintendo Switch', 'Consola híbrida de Nintendo lanzada en 2017'),
-(5, 'PlayStation 4', 'Consola de Sony lanzada en 2013'),
-(6, 'Xbox One', 'Consola de Microsoft lanzada en 2013'),
-(7, 'iOS', 'Sistema operativo móvil de Apple'),
-(8, 'Android', 'Sistema operativo móvil de Google'),
-(9, 'Mac', 'Computadoras de Apple'),
-(10, 'Linux', 'Sistema operativo de código abierto');
+INSERT INTO `plataformas` (`idplataforma`, `idestatus`, `nombre`, `descripcion`) VALUES
+(1, 1, 'PC', 'Computadoras personales'),
+(2, 1, 'PlayStation 5', 'Consola de Sony lanzada en 2020'),
+(3, 1, 'Xbox Series X', 'Consola de Microsoft lanzada en 2020'),
+(4, 1, 'Nintendo Switch', 'Consola híbrida de Nintendo lanzada en 2017'),
+(5, 1, 'PlayStation 4', 'Consola de Sony lanzada en 2013'),
+(6, 1, 'Xbox One', 'Consola de Microsoft lanzada en 2013'),
+(7, 1, 'iOS', 'Sistema operativo móvil de Apple'),
+(8, 1, 'Android', 'Sistema operativo móvil de Google'),
+(9, 1, 'Mac', 'Computadoras de Apple'),
+(10, 1, 'Linux', 'Sistema operativo de código abierto');
 
 -- --------------------------------------------------------
 
@@ -428,25 +586,60 @@ INSERT INTO `plataformas` (`idplataforma`, `nombre`, `descripcion`) VALUES
 --
 
 CREATE TABLE `usuarios` (
-  `id` int NOT NULL,
-  `idestatus` int NOT NULL,
-  `idrol` int NOT NULL DEFAULT '1',
+  `idusuario` int NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `correo` varchar(100) NOT NULL,
-  `clave` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `rol` enum('cliente','admin') DEFAULT 'cliente',
+  `fechacreacion` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `activo` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `idestatus`, `idrol`, `nombre`, `correo`, `clave`) VALUES
-(1, 1, 1, 'William arteaga', 'wea@gmail.com', 'admin'),
-(2, 1, 1, 'Alberto Garcia', 'ag@gmail.com', 'operador');
+INSERT INTO `usuarios` (`idusuario`, `nombre`, `email`, `password`, `rol`, `fechacreacion`, `activo`) VALUES
+(1, 'Ana García', 'ana.garcia@admin.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'admin', '2025-07-29 15:15:48', 1),
+(2, 'Carlos Mendoza', 'carlos.mendoza@admin.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'admin', '2025-07-29 15:15:48', 1),
+(3, 'Luis Pérez', 'luis.perez@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(4, 'María López', 'maria.lopez@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(5, 'Jorge Ramírez', 'jorge.ramirez@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(6, 'Sofía Torres', 'sofia.torres@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(7, 'Diego Fernández', 'diego.fernandez@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(8, 'Valentina Díaz', 'valentina.diaz@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(9, 'Andrés Castro', 'andres.castro@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(10, 'Camila Ruiz', 'camila.ruiz@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(11, 'Felipe Ortega', 'felipe.ortega@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(12, 'Lucía Méndez', 'lucia.mendez@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(13, 'Mateo Silva', 'mateo.silva@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(14, 'Isabella Vargas', 'isabella.vargas@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(15, 'Nicolás Paredes', 'nicolas.paredes@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(16, 'Emilia Navarro', 'emilia.navarro@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(17, 'Tomás Jiménez', 'tomas.jimenez@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(18, 'Antonella Rojas', 'antonella.rojas@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(19, 'Sebastián Castro', 'sebastian.castro@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1),
+(20, 'Renata Soto', 'renata.soto@cliente.com', '$2b$10$E6zGxM3Z7Z0eJtq.sv3p7uQ7i0Y9X1a2b3c4d5e6f7g8h9i0j1k2l3m4', 'cliente', '2025-07-29 15:15:48', 1);
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `carrito`
+--
+ALTER TABLE `carrito`
+  ADD PRIMARY KEY (`idcarrito`),
+  ADD UNIQUE KEY `unique_item_per_user` (`idusuario`,`idjuego`),
+  ADD KEY `idjuego` (`idjuego`);
+
+--
+-- Indices de la tabla `detalle_pedido`
+--
+ALTER TABLE `detalle_pedido`
+  ADD PRIMARY KEY (`iddetalle`),
+  ADD KEY `idpedido` (`idpedido`),
+  ADD KEY `idjuego` (`idjuego`);
 
 --
 -- Indices de la tabla `estatus`
@@ -473,6 +666,27 @@ ALTER TABLE `juegos_plataformas`
   ADD PRIMARY KEY (`idjuego_plataforma`);
 
 --
+-- Indices de la tabla `metodos_pago`
+--
+ALTER TABLE `metodos_pago`
+  ADD PRIMARY KEY (`idmetodo`);
+
+--
+-- Indices de la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  ADD PRIMARY KEY (`idpago`),
+  ADD KEY `idpedido` (`idpedido`),
+  ADD KEY `idmetodo` (`idmetodo`);
+
+--
+-- Indices de la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD PRIMARY KEY (`idpedido`),
+  ADD KEY `idusuario` (`idusuario`);
+
+--
 -- Indices de la tabla `plataformas`
 --
 ALTER TABLE `plataformas`
@@ -482,11 +696,24 @@ ALTER TABLE `plataformas`
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`idusuario`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `carrito`
+--
+ALTER TABLE `carrito`
+  MODIFY `idcarrito` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_pedido`
+--
+ALTER TABLE `detalle_pedido`
+  MODIFY `iddetalle` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `estatus`
@@ -498,13 +725,13 @@ ALTER TABLE `estatus`
 -- AUTO_INCREMENT de la tabla `generos`
 --
 ALTER TABLE `generos`
-  MODIFY `idgenero` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `idgenero` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `juegos`
 --
 ALTER TABLE `juegos`
-  MODIFY `idjuego` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `idjuego` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT de la tabla `juegos_plataformas`
@@ -513,16 +740,65 @@ ALTER TABLE `juegos_plataformas`
   MODIFY `idjuego_plataforma` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=171;
 
 --
+-- AUTO_INCREMENT de la tabla `metodos_pago`
+--
+ALTER TABLE `metodos_pago`
+  MODIFY `idmetodo` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  MODIFY `idpago` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT de la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  MODIFY `idpedido` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
 -- AUTO_INCREMENT de la tabla `plataformas`
 --
 ALTER TABLE `plataformas`
-  MODIFY `idplataforma` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idplataforma` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idusuario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `carrito`
+--
+ALTER TABLE `carrito`
+  ADD CONSTRAINT `carrito_ibfk_1` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`) ON DELETE CASCADE,
+  ADD CONSTRAINT `carrito_ibfk_2` FOREIGN KEY (`idjuego`) REFERENCES `juegos` (`idjuego`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `detalle_pedido`
+--
+ALTER TABLE `detalle_pedido`
+  ADD CONSTRAINT `detalle_pedido_ibfk_1` FOREIGN KEY (`idpedido`) REFERENCES `pedidos` (`idpedido`) ON DELETE CASCADE,
+  ADD CONSTRAINT `detalle_pedido_ibfk_2` FOREIGN KEY (`idjuego`) REFERENCES `juegos` (`idjuego`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  ADD CONSTRAINT `pagos_ibfk_1` FOREIGN KEY (`idpedido`) REFERENCES `pedidos` (`idpedido`) ON DELETE CASCADE,
+  ADD CONSTRAINT `pagos_ibfk_2` FOREIGN KEY (`idmetodo`) REFERENCES `metodos_pago` (`idmetodo`);
+
+--
+-- Filtros para la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`idusuario`) REFERENCES `usuarios` (`idusuario`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
